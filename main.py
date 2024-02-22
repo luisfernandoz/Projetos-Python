@@ -20,6 +20,10 @@ def main ():
     format_date = date.strftime("%d-%m-%Y %H:%M")
     print("You entered:", format_date)
 
+    print("File test")
+    f = open("save.txt", "r")
+    print(f.read(33))
+
     main()
 
 def create_new_event():
