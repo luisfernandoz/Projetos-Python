@@ -1,8 +1,29 @@
 import datetime
-import os
+import mysql.connector
+
+def connect_to_database():
+    try: 
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="",
+        )
+    except mysql.connector.Error as err:
+        print(err)
+        return None
+    else:
+        print("Connected to the database")
+        return mydb
+
+mydb = connect_to_database()
+mycursor = mydb.cursor()
+
+mycursor.execute("CREATE DATABASE IF NOT EXISTS calendario")
+mycursor.execute("USE calendario")
+mycursor.execute("CREATE TABLE IF NOT EXISTS eventos (eve_id INT AUTO_INCREMENT PRIMARY KEY, eve_nome VARCHAR(255), eve_desc TEXT, eve_date CHAR(16))")
 
 def main ():
-
+    
     print("+-------------+")
     print("|Event manager|")
     print("+-------------+")
@@ -16,54 +37,61 @@ def main ():
 
     if a == "1":
         new_title, description, date = create_new_event()
-        print("Title: "+ new_title)
-        print("Description: "+ description)
-        format_date = date.strftime("%d-%m-%Y %H:%M")
-        print("You entered:", format_date)
-        input("Press 1 to save or 2 to cancel: ")
-        if input == "1":
-            save(new_title, description, date)
-        elif input == "2":
-            pass
+        
+        while True:
+            i = input("Press 1 to save or 2 to cancel: ")
+            if i == "1":
+                mycursor.execute("INSERT INTO eventos (eve_nome, eve_desc, eve_date) VALUES (%s, %s, %s)", (new_title, description, date))
+                mydb.commit()
+                print("Event saved")
+                break
+            elif i == "2":
+                print("Event not saved")
+                break
+            else:
+                print("Invalid option")
+        main()
+
     elif a == "2":
         print("\nAll Events: \n")
-        print("Title, Description, Date")
-        view_event()
+        print("ID, Title, Description, Date")
+        mycursor.execute("SELECT * FROM eventos ORDER BY eve_date ASC")
+        result = mycursor.fetchall()
+
+        for row in result:
+            print(row)
+        main()
+
     elif a == "3":
         edit_event()
+
     elif a == "4":
         delete_event()
+
     elif a == "5":
         exit()
 
 
 def create_new_event():
-    new_title = input("Insert title: ")
+    while True: 
+        new_title = input("Insert title: ")
+        if len(new_title) > 0:
+            break
+        else:
+            print("Please insert a title")            
     description = input("Insert description: ")
     while True:
         nv_date = input("Insert date(DD-MM-YYYY HH:MM): ")
         try:
             date = datetime.datetime.strptime(nv_date, "%d-%m-%Y %H:%M")
-            return new_title, description,date
+            return new_title, description, date
         except ValueError:
             print("Please type in a valid date format (DD-MM-YYYY HH:MM)")
-
-def view_event():
-    f = open("save.txt", "r")
-    i = 0
-    for line in f:
-        i+=1
-        print("Event: "+str(i))
-        print(line)
 
 def edit_event():
     pass
 
 def delete_event():
     pass
-
-def save(a, b, c):
-    with open("save.txt", "a") as file:
-        file.write(a + ", " + b + ", " + c.strftime("%d-%m-%Y %H:%M") + "\n")
 
 main()
