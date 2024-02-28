@@ -1,4 +1,3 @@
-@ -1,69 +0,0 @@
 import datetime
 import mysql.connector
 
@@ -18,7 +17,6 @@ def connect_to_database():
 
 mydb = connect_to_database()
 mycursor = mydb.cursor()
-
 mycursor.execute("CREATE DATABASE IF NOT EXISTS calendario")
 mycursor.execute("USE calendario")
 mycursor.execute("CREATE TABLE IF NOT EXISTS eventos (eve_id INT AUTO_INCREMENT PRIMARY KEY, eve_nome VARCHAR(255), eve_desc TEXT, eve_date CHAR(16))")
@@ -55,7 +53,9 @@ def main ():
 
     elif a == "2":
         print("\nAll Events: \n")
-        print("ID, Title, Description, Date")
+        print("+----+-------+-------------+------+")
+        print("| ID | Title | Description | Date |")
+        print("+----+-------+-------------+------+")
         mycursor.execute("SELECT * FROM eventos ORDER BY eve_date ASC")
         result = mycursor.fetchall()
 
