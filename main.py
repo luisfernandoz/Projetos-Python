@@ -90,7 +90,93 @@ def create_new_event():
             print("Please type in a valid date format (DD-MM-YYYY HH:MM)")
 
 def edit_event():
-    pass
+    id = input("Type the ID of the event you want to edit: ")
+    print("What do you want to change?")
+    print("(1) - Title")
+    print("(2) - Description")
+    print("(3) - Date")
+    print("(4) - Back")
+    opt = input("Type the option: ")
+
+
+    if opt == "1":
+        while True:
+            upd_name = input("Type the new title: ")
+            if len(upd_name) > 0:
+                break
+            else:
+                print("Please insert a title")  
+        sql = ("UPDATE eventos SET eve_nome = %s WHERE eve_id = %s ")
+        values = (upd_name, id)
+        mycursor.execute(sql, values)
+        mydb.commit()
+        print("Title has been changed")
+        while True:
+            aa = int(input("press 1 to edit the same event, 2 to edit another event, 3 to exit"))
+            if aa == 1:
+                edit_event()
+            elif aa == 2:
+                edit_event()
+            elif aa == 3:
+                main()
+            else:
+                print("Choose a number between 1 to 3")
+
+
+    elif opt == "2":
+        while True:
+            upd_desc = input("Type the new Description: ")
+            if len(upd_desc) > 0:
+                break
+            else:
+                print("Please insert a description.")
+        sql = ("UPDATE eventos SET eve_desc = %s WHERE eve_id = %s ")
+        values = (upd_desc, id)
+        mycursor.execute(sql, values)
+        mydb.commit()
+        print("Description has been changed!")
+        while True:
+            aa = int(input("press 1 to edit the same event, 2 to edit another event, 3 to exit"))
+            if aa == 1:
+                edit_event()
+            elif aa == 2:
+                edit_event()
+            elif aa == 3:
+                main()
+            else:
+                print("Choose a number between 1 to 3")
+
+    elif opt == "3":
+        while True:
+            upd_date = input("Type the new Date (DD-MM-YYYY) (HH:MM): ")
+            if len(upd_date) > 0:
+                nw_date = datetime.datetime.strptime(upd_date, "%d-%m-%Y %H:%M")
+                break
+            else:
+                print("Please insert a correct date.")
+        sql = ("UPDATE eventos SET eve_date = %s WHERE eve_id = %s ")
+        values = (nw_date, id)
+        mycursor.execute(sql, values)
+        mydb.commit()
+        print("Date has been changed!")
+        while True:
+            aa = int(input("press 1 to edit the same event, 2 to edit another event, 3 to exit"))
+            if aa == 1:
+                edit_event()
+            elif aa == 2:
+                edit_event()
+            elif aa == 3:
+                main()
+            else:
+                print("Choose a number between 1 to 3")
+
+    elif opt == "4":
+        main()
+
+    else:
+        print("please choose a number between 1 to 4.")
+        edit_event()
+    
 
 def delete_event():
     pass
