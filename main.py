@@ -1,6 +1,5 @@
 import datetime
 import mysql.connector
-from flask import Flask, render_template
 
 def connect_to_database():
     try: 
@@ -11,9 +10,9 @@ def connect_to_database():
         )
     except mysql.connector.Error as err:
         print(err)
-        return None
+        exit()
     else:
-        print("Connected to the database")
+        print("Connected to the database\n")
         return mydb
 
 mydb = connect_to_database()
@@ -43,13 +42,13 @@ def main ():
             if i == "1":
                 mycursor.execute("INSERT INTO eventos (eve_nome, eve_desc, eve_date) VALUES (%s, %s, %s)", (new_title, description, date))
                 mydb.commit()
-                print("Event saved")
+                print("Event saved\n")
                 break
             elif i == "2":
-                print("Event not saved")
+                print("Event not saved\n")
                 break
             else:
-                print("Invalid option")
+                print("Invalid Option")
         main()
 
     elif a == "2":
@@ -62,6 +61,7 @@ def main ():
 
         for row in result:
             print(row)
+        print()
         main()
 
     elif a == "3":
@@ -75,6 +75,9 @@ def main ():
 
     elif a == "6":
         reset_all()
+    else:
+        print("\nInsert a Number between 1-5\n")
+        main()
 
 
 def create_new_event():
@@ -184,10 +187,10 @@ def delete_event():
     if i == "1":
         mycursor.execute(sql, val)
         mydb.commit()
-        print("Event deleted")
+        print("Event deleted\n")
         main()
     elif i == "2":
-        print("Event not deleted")
+        print("Event not deleted\n")
         main()
     else:
         print("Invalid option")
