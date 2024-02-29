@@ -73,6 +73,9 @@ def main ():
     elif a == "5":
         exit()
 
+    elif a == "6":
+        reset_all()
+
 
 def create_new_event():
     while True: 
@@ -113,15 +116,13 @@ def edit_event():
         mydb.commit()
         print("Title has been changed")
         while True:
-            aa = int(input("press 1 to edit the same event, 2 to edit another event, 3 to exit"))
+            aa = int(input("press 1 to edit an event, 2 to exit: "))
             if aa == 1:
                 edit_event()
             elif aa == 2:
-                edit_event()
-            elif aa == 3:
                 main()
             else:
-                print("Choose a number between 1 to 3")
+                print("Choose 1 or 2")
 
 
     elif opt == "2":
@@ -137,15 +138,13 @@ def edit_event():
         mydb.commit()
         print("Description has been changed!")
         while True:
-            aa = int(input("press 1 to edit the same event, 2 to edit another event, 3 to exit"))
+            aa = int(input("press 1 to edit an event, 2 to exit: "))
             if aa == 1:
                 edit_event()
             elif aa == 2:
-                edit_event()
-            elif aa == 3:
                 main()
             else:
-                print("Choose a number between 1 to 3")
+                print("Choose 1 or 2")
 
     elif opt == "3":
         while True:
@@ -161,15 +160,13 @@ def edit_event():
         mydb.commit()
         print("Date has been changed!")
         while True:
-            aa = int(input("press 1 to edit the same event, 2 to edit another event, 3 to exit"))
+            aa = int(input("press 1 to edit an event, 2 to exit: "))
             if aa == 1:
                 edit_event()
             elif aa == 2:
-                edit_event()
-            elif aa == 3:
                 main()
             else:
-                print("Choose a number between 1 to 3")
+                print("Choose 1 or 2")
 
     elif opt == "4":
         main()
@@ -180,9 +177,37 @@ def edit_event():
     
 
 def delete_event():
-    pass
+    id = input("Type the ID of the event you want to delete: ")
+    sql = "DELETE FROM eventos WHERE eve_id = %s"
+    val = (id, )
+    i = input("Press 1 to delete or 2 to cancel: ")
+    if i == "1":
+        mycursor.execute(sql, val)
+        mydb.commit()
+        print("Event deleted")
+        main()
+    elif i == "2":
+        print("Event not deleted")
+        main()
+    else:
+        print("Invalid option")
+        delete_event()
+    
+    main()
 
-
+def reset_all():
+    i = input("Press 1 to reset all events or 2 to cancel: ")
+    if i == "1":
+        mycursor.execute("DROP DATABASE calendario")
+        mydb.commit()
+        print("All events deleted")
+        exit()
+    elif i == "2":
+        print("Events not deleted")
+        main()
+    else:
+        print("Invalid option")
+        reset_all()
 
 main()
 
