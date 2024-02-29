@@ -1,5 +1,6 @@
 import datetime
 import mysql.connector
+from flask import Flask, render_template
 
 def connect_to_database():
     try: 
