@@ -78,7 +78,7 @@
         <tbody>
           {% for event in events %}
           <tr>
-            <td>{{ event[1] }}</td>
+            <td style="width: fit-content">{{ event[1] }}</td>
             <td>{{ event[2] }}</td>
             <td>{{ event[3] }}</td>
             <td>
@@ -86,18 +86,16 @@
             </td>
           </tr>
           {% endfor %}
+          <form id="addEvent" action="/submit" method="post">
+            <tr>
+              <td><input type="text" id="title" name="title" required /></td>
+              <td><input type="text" id="description" name="description" /></td>
+              <td><input type="date" id="date" name="date" required /></td>
+              <td><input type="submit" value="Submit" /></td>
+            </tr>
+          </form>
         </tbody>
       </table>
-      <h2>Create a New Event</h2>
-      <form id="addEvent" action="/submit" method="post">
-        <label for="title">Title:</label><br />
-        <input type="text" id="title" name="title" required /><br />
-        <label for="description">Description:</label><br />
-        <input type="text" id="description" name="description" /><br />
-        <label for="date">Date:</label><br />
-        <input type="date" id="date" name="date" required /><br /><br />
-        <input type="submit" value="Submit" />
-      </form>
     </div>
 
     <script>
