@@ -9,6 +9,7 @@ def connect_to_database():
             host="localhost",
             user="root",
             password="",
+            database="calendario"  # Added direct database selection here.
         )
         print("Connected to the database")
         return mydb
@@ -16,20 +17,12 @@ def connect_to_database():
         print("Error connecting to the database:", err)
         return None
 
-mydb = connect_to_database()
-mycursor = mydb.cursor()
-
-mycursor.close()
-
 @app.route('/')
 def index():
     mydb = connect_to_database()
     if mydb:
         try:
             mycursor = mydb.cursor()
-            mycursor.execute("CREATE DATABASE IF NOT EXISTS calendario")
-            mycursor.execute("USE calendario")
-            mycursor.execute("CREATE TABLE IF NOT EXISTS eventos (eve_id INT AUTO_INCREMENT PRIMARY KEY, eve_nome VARCHAR(255), eve_desc TEXT, eve_date CHAR(16))")
             mycursor.execute("SELECT * FROM eventos ORDER BY eve_date ASC")
             result = mycursor.fetchall()
             return render_template('index.html', events=result)
@@ -42,13 +35,12 @@ def index():
     else:
         return render_template('error.html', message="Failed to connect to the database.")
 
-@app.route('/delete/<int:event_id>', methods=['POST'])
+@app.route('/delete/<event_id>', methods=['POST'])
 def deleteEvent(event_id):
     mydb = connect_to_database()
     if mydb:
         try:
             mycursor = mydb.cursor()
-            mycursor.execute("USE calendario")
             mycursor.execute("DELETE FROM eventos WHERE eve_id = %s", (event_id,))
             mydb.commit()
             return jsonify({'status': 'success', 'message': 'Event deleted successfully.'})
@@ -60,25 +52,54 @@ def deleteEvent(event_id):
             mydb.close()
     else:
         return jsonify({'status': 'error', 'message': 'Failed to connect to the database.'}), 500
-    
+
 @app.route('/submit', methods=['POST'])
 def submit():
     title = request.form['title']
     description = request.form['description']
     date = request.form['date']
-
     mydb = connect_to_database()
     if mydb:
         try:
             cursor = mydb.cursor()
-            cursor.execute("USE calendario")
             cursor.execute("INSERT INTO eventos (eve_nome, eve_desc, eve_date) VALUES (%s, %s, %s)", (title, description, date))
             mydb.commit()
             cursor.close()    
             return jsonify({'status': 'success', 'message': 'Event created successfully.'})
-        except mysql.connector.Error as err:
-            print("Error executing SQL query:", err)
-            return jsonify({'status': 'error', 'message': 'Error creating event.'}), 500
+        except mysql.connector.Error as error:
+            print("Failed to insert record into MySQL table {}".format(error))
+            return jsonify({'status': 'error', 'message': 'Failed to create event.'}), 500
+        finally:
+            if mydb.is_connected():
+                cursor.close()
+                mydb.close()
+                print("MySQL connection is closed")
+    else:
+        return jsonify({'status': 'error', 'message': 'Database connection failed.'}), 500
+
+@app.route('/edit/<event_id>', methods=['POST'])
+def edit(event_id):
+    title = request.form['title']
+    description = request.form['description']
+    date = request.form['date']
+    mydb = connect_to_database()
+    if mydb:
+        try:
+            cursor = mydb.cursor()
+            cursor.execute("UPDATE eventos SET eve_nome = %s, eve_desc = %s, eve_date = %s WHERE eve_id = %s", (title, description, date, event_id))
+            mydb.commit()
+            cursor.close()    
+            return jsonify({'status': 'success', 'message': 'Event updated successfully.'})
+        except mysql.connector.Error as error:
+            print("Failed to update record in MySQL table {}".format(error))
+            return jsonify({'status': 'error', 'message': 'Failed to update event.'}), 500
+        finally:
+            if mydb.is_connected():
+                cursor.close()
+                mydb.close()
+                print("MySQL connection is closed")
+    else:
+        return jsonify({'status': 'error', 'message': 'Database connection failed.'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
