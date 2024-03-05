@@ -7,9 +7,53 @@
     <style>
       body {
         font-family: Arial, Helvetica, sans-serif;
-        background-color: #121212;
+        background-color: #31374a;
         color: #eee;
       }
+      @import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+
+      svg {
+      font-family: "Russo One", sans-serif;
+      width: 100%; height: 100%;
+      }
+      svg text {
+      animation: stroke 5s infinite alternate;
+      stroke-width: 2;
+      stroke: #5697FF;
+      font-size: 100px;
+      }
+      @keyframes stroke {
+      0%   {
+        fill: rgba(200,224,250,0); stroke: rgba(86,151,255,1);
+        stroke-dashoffset: 25%; stroke-dasharray: 0 50%; stroke-width: 2;
+      }
+      70%  {fill: rgba(200,224,250,0); stroke: rgba(86,151,255,1); }
+      80%  {fill: rgba(200,224,250,0); stroke: rgba(86,151,255,1); stroke-width: 3; }
+      100% {
+        fill: rgba(200,224,250,1); stroke: rgba(86,151,255,0);
+        stroke-dashoffset: -25%; stroke-dasharray: 50% 0; stroke-width: 0;
+      }
+      }
+
+      .wrapper {background-color: #31374A}
+
+      .prettyButton {
+        font-family: 'arial black';
+        font-weight: bold;
+        color: #FFFFFF !important;
+        font-size: 14px;
+        text-shadow: 1px 1px 0px #1D243B;
+        box-shadow: 1px 1px 1px #BEE2F9;
+        padding: 5px 8px;
+        border-radius: 10px;
+        border: 2px solid #667DC9;
+        background: #354169;
+      }
+      .prettyButton:hover {
+      color: #FFFFFF !important;
+      background: #468CCF;
+}
+
       .container {
         max-width: 800px;
         margin: 0 auto;
@@ -17,28 +61,29 @@
       }
       h1,
       p {
+        text-align: center;
         color: #eee;
       }
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
+        margin-top: 20px; 
       }
       table th,
       table td {
-        border: 1px solid #121212;
+        border: 1px solid #010a29;
         padding: 10px;
         text-align: left;
       }
       table th {
-        background-color: #333333;
+        background-color: #161e38;
       }
       table tbody tr:nth-child(odd) {
-        background-color: #444444;
+        background-color: #2c3861;
         color: #ffffff;
       }
       table tbody tr:nth-child(even) {
-        background-color: #333333;
+        background-color: #1d243c;
         color: #ffffff;
       }
       input[type="text"],
@@ -48,17 +93,23 @@
         padding: 12px 20px;
         margin: 8px 0;
         display: inline-block;
-        border: 1px solid #ccc;
+        border: 1px solid #010a29;
         border-radius: 4px;
         box-sizing: border-box;
-        background-color: #333333;
+        background-color: #31374a;
         color: #eee;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Event Manager</h1>
+      <div class="wrapper">
+        <svg>
+          <text x="50%" y="50%" dy=".35em" text-anchor="middle">
+            Event manager
+          </text>
+        </svg>
+      </div>
       <hr />
       <table>
         <thead>
@@ -76,30 +127,32 @@
             <td>{{ event[2] }}</td>
             <td>{{ event[3] }}</td>
             <td>
-              <button
+              <button class="prettyButton"
                 onclick="editEvent('{{ event[0] }}', '{{ event[1] }}', '{{ event[2] }}', '{{ event[3] }}')"
-              >
+                >
                 Edit
               </button>
               &nbsp;
-              <button onclick="deleteEvent('{{ event[0] }}')">Delete</button>
+              <br>
+              <br>
+              <button class="prettyButton" 
+              onclick="deleteEvent('{{ event[0] }}')">Delete</button>
             </td>
           </tr>
           {% endfor %}
           <form id="addEvent" action="/submit" method="post">
             <tr>
-              <td><input type="text" id="title" name="title" required /></td>
-              <td><input type="text" id="description" name="description" /></td>
+              <td><input placeholder="Title" type="text" id="title" name="title" required /></td>
+              <td><input placeholder="Description" type="text" id="description" name="description" /></td>
               <td><input type="date" id="date" name="date" required /></td>
               <td><input type="submit" value="Add Event" /><br>
               <button
                 type="button"
                 value="cancelEdit"
+                class="prettyButton"
                 onclick="cancelEdit()"
               >Cancel
               </td>
-              
-                Cancel
               </button>
             </tr>
           </form>
