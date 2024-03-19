@@ -13,46 +13,62 @@
       @import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
 
       svg {
-      font-family: "Russo One", sans-serif;
-      width: 100%; height: 100%;
+        font-family: "Russo One", sans-serif;
+        width: 100%;
+        height: 100%;
       }
       svg text {
-      animation: stroke 5s infinite alternate;
-      stroke-width: 2;
-      stroke: #5697FF;
-      font-size: 100px;
+        animation: stroke 5s infinite alternate;
+        stroke-width: 2;
+        stroke: #5697ff;
+        font-size: 100px;
       }
       @keyframes stroke {
-      0%   {
-        fill: rgba(200,224,250,0); stroke: rgba(86,151,255,1);
-        stroke-dashoffset: 25%; stroke-dasharray: 0 50%; stroke-width: 2;
-      }
-      70%  {fill: rgba(200,224,250,0); stroke: rgba(86,151,255,1); }
-      80%  {fill: rgba(200,224,250,0); stroke: rgba(86,151,255,1); stroke-width: 3; }
-      100% {
-        fill: rgba(200,224,250,1); stroke: rgba(86,151,255,0);
-        stroke-dashoffset: -25%; stroke-dasharray: 50% 0; stroke-width: 0;
-      }
+        0% {
+          fill: rgba(200, 224, 250, 0);
+          stroke: rgba(86, 151, 255, 1);
+          stroke-dashoffset: 25%;
+          stroke-dasharray: 0 50%;
+          stroke-width: 2;
+        }
+        70% {
+          fill: rgba(200, 224, 250, 0);
+          stroke: rgba(86, 151, 255, 1);
+        }
+        80% {
+          fill: rgba(200, 224, 250, 0);
+          stroke: rgba(86, 151, 255, 1);
+          stroke-width: 3;
+        }
+        100% {
+          fill: rgba(200, 224, 250, 1);
+          stroke: rgba(86, 151, 255, 0);
+          stroke-dashoffset: -25%;
+          stroke-dasharray: 50% 0;
+          stroke-width: 0;
+        }
       }
 
-      .wrapper {background-color: #31374A}
+      .wrapper {
+        background-color: #31374a;
+      }
 
       .prettyButton {
-        font-family: 'arial black';
+        font-family: "arial black";
         font-weight: bold;
-        color: #FFFFFF !important;
+        color: #ffffff !important;
         font-size: 14px;
-        text-shadow: 1px 1px 0px #1D243B;
-        box-shadow: 1px 1px 1px #BEE2F9;
+        text-shadow: 1px 1px 0px #1d243b;
+        box-shadow: 1px 1px 1px #bee2f9;
         padding: 5px 8px;
         border-radius: 10px;
-        border: 2px solid #667DC9;
+        border: 2px solid #667dc9;
         background: #354169;
       }
       .prettyButton:hover {
-      color: #FFFFFF !important;
-      background: #468CCF;
-}
+        color: #ffffff !important;
+        background: #468ccf;
+      }
 
       .container {
         max-width: 800px;
@@ -67,7 +83,7 @@
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px; 
+        margin-top: 20px;
       }
       table th,
       table td {
@@ -127,33 +143,48 @@
             <td>{{ event[2] }}</td>
             <td>{{ event[3] }}</td>
             <td>
-              <button class="prettyButton"
+              <button
+                class="prettyButton"
                 onclick="editEvent('{{ event[0] }}', '{{ event[1] }}', '{{ event[2] }}', '{{ event[3] }}')"
-                >
+              >
                 Edit
               </button>
               &nbsp;
-              <br>
-              <br>
-              <button class="prettyButton" 
-              onclick="deleteEvent('{{ event[0] }}')">Delete</button>
+              <br />
+              <br />
+              <button
+                class="prettyButton"
+                onclick="deleteEvent('{{ event[0] }}')"
+              >
+                Delete
+              </button>
             </td>
           </tr>
           {% endfor %}
           <form id="addEvent" action="/submit" method="post">
             <tr>
-              <td><input placeholder="Title" type="text" id="title" name="title" required /></td>
-              <td><input placeholder="Description" type="text" id="description" name="description" /></td>
-              <td><input type="date" id="date" name="date" required /></td>
-              <td><input type="submit" value="Add Event" /><br>
-              <button
-                type="button"
-                value="cancelEdit"
-                class="prettyButton"
-                onclick="cancelEdit()"
-              >Cancel
+              <td>
+                <input
+                  placeholder="Title"
+                  type="text"
+                  id="title"
+                  name="title"
+                  required
+                />
               </td>
-              </button>
+              <td>
+                <input
+                  placeholder="Description"
+                  type="text"
+                  id="description"
+                  name="description"
+                />
+              </td>
+              <td><input type="date" id="date" name="date" required /></td>
+              <td>
+                <input type="submit" value="Add Event" /><br />
+                <input type="reset" value="Reset Form" class="prettyButton" />
+              </td>
             </tr>
           </form>
         </tbody>
@@ -161,15 +192,6 @@
     </div>
 
     <script>
-      function cancelEdit() {
-        $("#title").val("");
-        $("#description").val("");
-        $("#date").val("");
-        $("#addEvent").attr("action", "/submit");
-        $('#addEvent input[type="submit"]').val("Add Event");
-        $("#cancelEdit").hide();
-      }
-
       function deleteEvent(eventId) {
         if (!confirm("Are you sure you want to delete this event?")) {
           return;
